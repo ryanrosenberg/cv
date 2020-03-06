@@ -22,18 +22,23 @@
 
 /* Customize some of the sizing variables */
 :root {
-  --sidebar-width: 12rem !important; /* Shrink sidebar width  */
+  --sidebar-width: 14rem !important; /* Shrink sidebar width  */
   --sidebar-horizontal-padding: 0.02in; /* Reduce sidebar padding */
 }
 
 [data-id="main"]{
   width: calc(var(--main-width) + 0.2in);
+  font-size: .9rem;
+}
+
+[data-id="main"] > .title {
+  font-size: 1rem;
 }
 
 .aside {
   height: 100%;
   width: var(--sidebar-width) !important;
-  padding-left: 0.75rem;
+  padding-left: 0.5rem;
   padding-right: 0;
   padding-top: 2rem;
 }

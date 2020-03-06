@@ -1,6 +1,6 @@
 ---
-title: Nick Strayer's Resume"
-author: Nick Strayer
+title: external-resume
+author: Ryan Rosenberg
 date: "`r Sys.Date()`"
 output:
   pagedown::html_resume:
@@ -19,7 +19,7 @@ library(tidyverse)
 library(glue)
 
 # Set this to true to have links turned into footnotes at the end of the document
-PDF_EXPORT <- FALSE
+PDF_EXPORT <- TRUE
 
 # Holds all the links that were inserted for placement at the end
 links <- c()
@@ -30,16 +30,8 @@ source('parsing_functions.R')
 # First let's get the data, filtering to only the items tagged as
 # Resume items
 position_data <- read_csv('positions.csv') %>% 
-  filter(in_resume) %>% 
-  mutate(
-    # Build some custom sections by collapsing others
-    section = case_when(
-      section %in% c('research_positions', 'industry_positions') ~ 'positions', 
-      section %in% c('data_science_writings', 'by_me_press') ~ 'writings',
-      TRUE ~ section
-    )
-  ) 
-
+  filter(in_resume)
+  
 ```
 
 
@@ -47,18 +39,15 @@ Aside
 ================================================================================
 
 
-![logo](beta_dist.png){width=100%}
+![logo](Rplot.png)
 
 Contact {#contact}
 --------------------------------------------------------------------------------
 
-
-
-- <i class="fa fa-envelope"></i> nick.strayer@gmail.com
-- <i class="fa fa-twitter"></i> NicholasStrayer
-- <i class="fa fa-github"></i> github.com/nstrayer
-- <i class="fa fa-link"></i> [nickstrayer.me](http://nickstrayer.me/)
-- <i class="fa fa-phone"></i> (734) 645-0110
+- <i class="fa fa-envelope"></i> ryan.rosenberg@outlook.com
+- <i class="fa fa-twitter"></i> rosenbergry
+- <i class="fa fa-github"></i> github.com/ryanrosenberg
+- <i class="fa fa-phone"></i> (914) 588-3813
 
 
 
@@ -70,33 +59,53 @@ Language Skills {#skills}
 skills <- tribble(
   ~skill,               ~level,
   "R",                  5,
-  "Javascript (d3.js)", 4.5,
-  "Python",             4,
-  "Bash",               3.5,
-  "SQL",                3,
-  "C++",                3,
-  "AWK",                3
+  "Civis Platform",     5,
+  "SQL",                4,
+  "Tableau",            4,
+  "Python",             3,
+  "Git",                3,
+  "JavaScript",         2,
 )
-build_skill_bars(skills)
+
+ggplot(skills, aes(reorder(skill, level), level)) +
+  geom_col(fill = '#929292') +
+  geom_text(aes(skill, 0.1, label = skill), 
+            hjust = 0, family = 'IBM Plex Sans', color = 'white', size = 8) +
+  scale_y_continuous(breaks = 1:5,
+                     labels = c("Beginner", "Basic", "Functional",
+                                "Advanced", "Expert")) +
+  coord_flip() +
+  theme(text = element_text(family = 'IBM Plex Sans'),
+        plot.background = element_rect(fill = '#F7FBFF'),
+        panel.background = element_rect(fill = '#F7FBFF'),
+        panel.grid = element_blank(),
+        panel.grid.major.x = element_line(color = '#202020', 
+                                          linetype = 'dashed'),
+        axis.line = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_text(size = 18),
+        axis.title = element_blank(),
+        axis.ticks = element_blank())
+# 
+# ggsave(p, "skill-graph.png")
+
 ```
 
+<!-- ![logo](skill-graph.png) -->
 
-
-Open Source Contributions {#open-source}
+Hobbies {#experience}
 --------------------------------------------------------------------------------
 
-All projects available at `github.com/nstrayer/<name>`
+### Quizbowl
 
+- Buzzer competition testing knowledge in a range of academic subjects
+- Directed national tournaments at high school and college levels
+- Developed widely-used statistic for measuring player and team strength
 
-- `shinysense`: R package to use sensor data in Shiny apps
-- `tuftesque`: Hugo theme (behind LiveFreeOrDichotomize.com)
-- `slid3r`: D3 add-on for fully svg slider inputs
+### Data Visualization
 
-
-More info {#more-info}
---------------------------------------------------------------------------------
-
-See full CV at nickstrayer.me/cv for more complete list of positions and publications.
+- I frequently make data visualizations for personal projects, e.g. testing out a new R package or analyzing quizbowl statistics
+- Created transect map at top right with QGIS and R, from [Tom White's original maps](https://cartographicperspectives.org/index.php/journal/article/view/1536/1726).
 
 
 Disclaimer {#disclaimer}
@@ -104,29 +113,31 @@ Disclaimer {#disclaimer}
 
 Made w/ [**pagedown**](https://github.com/rstudio/pagedown). 
 
-Source code: [github.com/nstrayer/cv](https://github.com/nstrayer/cv).
-
-Last updated on `r Sys.Date()`.
-
-
+Source code: [github.com/ryanrosenberg/cv](https://github.com/ryanrosenberg/cv).
 
 
 Main
 ================================================================================
 
-Nick Strayer {#title}
+Ryan Rosenberg {#title}
 --------------------------------------------------------------------------------
 
 ```{r}
-intro_text <- "I have made [visualizations viewed by hundreds of thousands of people](https://www.nytimes.com/interactive/2016/08/26/us/college-student-migration.html), [sped up query times for 25 terabytes of data by an average of 4,800 times](https://livefreeordichotomize.com/2019/06/04/using_awk_and_r_to_parse_25tb/), and built [packages for R](https://github.com/nstrayer/shinysense) that let you [do magic](http://nickstrayer.me/dataDayTexas/).
+intro_text <- "I am a versatile data scientist, with experience in web panel surveys, data pipelining, predictive modeling, and data visualization and reporting.
 
-Currently searching for a data science position that allows me to build tools using visualization and machine learning to help people explore and understand their data. 
-"
+Moving to Palo Alto in March and looking for positions in the Bay Area or remote."
 
 
 cat(sanitize_links(intro_text))
 ```
 
+
+Work Experience {data-icon=suitcase}
+--------------------------------------------------------------------------------
+
+```{r}
+position_data %>% print_section('work')
+```
 
 
 Education {data-icon=graduation-cap data-concise=true}
@@ -134,23 +145,6 @@ Education {data-icon=graduation-cap data-concise=true}
 
 ```{r}
 position_data %>% print_section('education')
-```
-
-
-
-Selected Positions {data-icon=suitcase}
---------------------------------------------------------------------------------
-
-```{r}
-position_data %>% print_section('positions')
-```
-
-Selected Writing {data-icon=newspaper}
---------------------------------------------------------------------------------
-
-
-```{r}
-position_data %>% print_section('writings')
 ```
 
 
